@@ -1,13 +1,25 @@
 import { StackNavigator } from 'react-navigation';
 
 import WelcomeScreen from '../Pages/WelcomeScreen';
-import NextPage from '../Pages/NextPage';
+import SignUp from '../Pages/SignUp';
+import SignIn from '../Pages/SignIn';
+import Success from '../Pages/Success';
+import GetData from '../Pages/GetData';
 
 export default StackNavigator({
   WelcomeScreen: {
     screen: WelcomeScreen,
   },
-  NextPage: {
-    screen: NextPage,
+  SignUp: {
+    screen: SignUp,
+  },
+  SignIn: {
+    screen: SignIn,
+  },
+  Success: {
+    screen: Success,
+  },
+  GetData: {
+    screen: GetData,
   },
 });

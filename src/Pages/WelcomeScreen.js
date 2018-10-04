@@ -1,112 +1,100 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, Text, View, Dimensions, Button, Alert, TouchableOpacity } from 'react-native';
-import GlobalStyles from '../../GlobalStyles';
+import {
+  Image,
+  Text,
+  View,
+  Dimensions,
+  // Button,
+  // Alert,
+  TouchableOpacity,
+} from 'react-native';
+import GlobalStyles from '../styles/GlobalStyles';
 
 class WelcomeScreen extends React.Component {
-  // static navigationOptions = () => ({
-    
-  // })
+  static navigationOptions = () => ({
+    header: null,
+  })
 
-  static getDerivedStateFromProps(props, state) {
-      return null;
-  }
+  // static getDerivedStateFromProps(props, state) {
+  //   return null;
+  // }
 
   constructor(props) { // 1
     super(props);
-    this.state = {};
+    this.state = {
+      text: 'Considerit',
+    };
     this.fullWidth = Dimensions.get('window').width;
-    this.state = {text: 'Considerit'};
   }
 
-  componentDidMount() {
+  // componentDidMount() {
 
-  }
+  // }
 
-  componentDidUpdate() {
+  // componentDidUpdate() {
 
-  }
+  // }
 
-  shouldComponentUpdate() {
+  // shouldComponentUpdate() {
 
-  }
+  // }
 
-  componentWillUnmount() {
-      
-  }
+  // componentWillUnmount() {
+
+  // }
 
   onPressButton = () => {
     const { navigation: { navigate } } = this.props;
-    navigate('NextPage');
+    navigate('SignUp');
   }
 
   render() {
-    
+    const { navigation: { navigate } } = this.props;
+    const { text } = this.state;
     return (
-      <View style={[GlobalStyles.container, styles.AlignContainer]}>
-        {/* <View style={{ height: 40, width: this.fullWidth }}> */}
-        <View style={styles.main_top_conteiner}>
-          {/* <Text style={styles.notification_text}>{'Considerit'.toUpperCase()}</Text> */}
-          <Text style={styles.welcome_text}>{this.state.text}</Text>
+      <View style={GlobalStyles.container}>
+        <View style={[GlobalStyles.main_top_conteiner, { flexDirection: 'row' }]}>
+          <View style={{ borderRightWidth: 1, marginRight: 15, paddingRight: 15 }}>
+            <Image
+              source={{ uri: 'https://www.shareicon.net/download/2015/09/15/101512_logo_512x512.png' }}
+              style={{ width: 100, height: 100, borderRightWidth: 10 }}
+            />
+          </View>
+          <Text style={GlobalStyles.welcome_text}>{text}</Text>
         </View>
 
-        <View style={styles.main_bottom_conteiner}>
-          <View style={styles.view_conteiner}>
-            <Text style={styles.notification_text}>Welcome to {this.state.text}</Text>
-          </View>
-          <View style={styles.view_conteiner}>
-            <Text style={styles.regular_text}>Are you ready to build more meaningful relationships that matter? Click 'Get Started' to start your journey</Text>
+        <View style={GlobalStyles.main_bottom_conteiner}>
+          <View style={GlobalStyles.view_conteiner}>
+            <Text style={GlobalStyles.notification_text}>
+              Welcome to &nbsp;
+              {text}
+            </Text>
           </View>
 
-          <TouchableOpacity style={{ width: '90%', paddingVertical: 10, backgroundColor: 'green', justifyContent: 'center', alignItems: 'center' }} onPress={this.onPressButton}>
-            <Text>Get started</Text>
+          <View style={[GlobalStyles.view_conteiner, { width: '90%' }]}>
+            <Text style={GlobalStyles.regular_text}>
+              Are you ready to build more meaningful
+              relationships that matter? Click `Get Started`
+              to start your journey
+            </Text>
+          </View>
+
+          <TouchableOpacity style={GlobalStyles.btn_green} onPress={this.onPressButton}>
+            <Text style={[GlobalStyles.notification_text, { fontWeight: 'normal', color: '#fff' }]}>Get started</Text>
           </TouchableOpacity>
-          <View style={[styles.view_conteiner, { flexDirection: 'row' }]}>
-            <Text style={styles.regular_text}>Already have an account?</Text><TouchableOpacity onPress={() => console.log('signIn')}><Text style={styles.regular_text}>&nbsp;Sign In</Text></TouchableOpacity>
+
+          <View style={[GlobalStyles.view_conteiner, { flexDirection: 'row' }]}>
+            <Text style={GlobalStyles.regular_text}>Already have an account?</Text>
+            <TouchableOpacity onPress={() => navigate('SignIn')}>
+              <Text style={GlobalStyles.regular_text}>&nbsp;Sign In</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  welcome_text: {
-    fontSize: 40,
-    fontWeight: 'bold',
-    color: 'skyblue',
-  },
-  notification_text: {
-    fontSize: 30,
-    fontWeight: 'bold',
-  },
-  view_conteiner: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  main_top_conteiner: {
-    backgroundColor: '#DDDDDD',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '50%',
-  },
-  main_bottom_conteiner: {
-    alignItems: 'center',
-    // justifyContent: 'center',
-    justifyContent: 'space-around',
-    backgroundColor: 'skyblue',
-    flexDirection: 'column',
-    height: '50%',
-  },
-  regular_text: {
-    fontSize: 18,
-    textAlign: 'center',
-  },
-});
 
 WelcomeScreen.propTypes = {
   myParams: PropTypes.shape({
