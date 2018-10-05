@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
+import { NavigationActions } from 'react-navigation';
 import { connect } from 'react-redux';
 import {
   View,
@@ -10,6 +11,7 @@ import {
   TextInput,
   Image,
 } from 'react-native';
+import LinkedInModal from 'react-native-linkedin';
 import { Ionicons } from '@expo/vector-icons';
 import GlobalStyles from '../styles/GlobalStyles';
 
@@ -35,6 +37,8 @@ static navigationOptions = ({ navigation: { goBack } }) => ({
   headerTitleStyle: {
     justifyContent: 'space-between',
     textAlign: 'center',
+    alignSelf: 'center',
+    flex: 1,
   },
   headerStyle: {
     backgroundColor: '#DDDDDD',
@@ -66,8 +70,15 @@ changeInput = (event) => {
 }
 
 onPressButton = () => {
-  const { navigation: { navigate } } = this.props;
-  navigate('Success');
+  const { reset, navigate } = NavigationActions;
+  const { navigation: { dispatch } } = this.props;
+  const resetAction = reset({
+    index: 0,
+    actions: [
+      navigate({ routeName: 'Success' }),
+    ],
+  });
+  dispatch(resetAction);
 }
 
 render() {
@@ -82,6 +93,13 @@ render() {
           />
           <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'skyblue' }}>Sign Up With LinkedIn</Text>
         </View>
+
+        <LinkedInModal
+          clientID="[ Your client id from https://www.linkedin.com/developer/apps ]"
+          clientSecret="[ Your client secret from https://www.linkedin.com/developer/apps ]"
+          redirectUri="[ Your redirect uri set into https://www.linkedin.com/developer/apps ]"
+          onSuccess={token => console.log(token)}
+        />
 
         <TextInput
           style={styles.auth_input}
@@ -125,5 +143,11 @@ render() {
 const mapStateToProp = () => ({
 
 });
+
+SignUp.propTypes = {
+  navigation: PropTypes.shape({
+    dispatch: PropTypes.func.isRequired,
+  }).isRequired,
+};
 
 export default connect(mapStateToProp)(SignUp);

@@ -97,15 +97,13 @@ class WelcomeScreen extends React.Component {
 }
 
 WelcomeScreen.propTypes = {
-  myParams: PropTypes.shape({
-    state: PropTypes.shape(),
-  }),
+  navigation: PropTypes.shape().isRequired,
 };
 
-WelcomeScreen.defaultProps = {
-  myParams: {
-    state: null,
-  },
-};
+// WelcomeScreen.defaultProps = {
+//   myParams: {
+//     state: null,
+//   },
+// };
 
 export default WelcomeScreen;

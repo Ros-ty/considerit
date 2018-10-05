@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
+import { NavigationActions } from 'react-navigation';
 import { connect } from 'react-redux';
 import {
   View,
   Text,
   Dimensions,
   TouchableOpacity,
-  // StyleSheet,
-  // TextInput,
   Image,
 } from 'react-native';
 import GlobalStyles from '../styles/GlobalStyles';
@@ -15,7 +14,6 @@ import GlobalStyles from '../styles/GlobalStyles';
 class Success extends Component {
   static navigationOptions = () => ({
     header: null,
-    gesturesEnabled: false,
   })
 
   constructor(props) {
@@ -25,8 +23,15 @@ class Success extends Component {
   }
 
   onPressButton = () => {
-    const { navigation: { navigate } } = this.props;
-    navigate('GetData');
+    const { reset, navigate } = NavigationActions;
+    const { navigation: { dispatch } } = this.props;
+    const resetAction = reset({
+      index: 0,
+      actions: [
+        navigate({ routeName: 'GetData' }),
+      ],
+    });
+    dispatch(resetAction);
   }
 
   render() {
@@ -58,5 +63,11 @@ class Success extends Component {
 const mapStateToProp = () => ({
 
 });
+
+Success.propTypes = {
+  navigation: PropTypes.shape({
+    dispatch: PropTypes.func.isRequired,
+  }).isRequired,
+};
 
 export default connect(mapStateToProp)(Success);

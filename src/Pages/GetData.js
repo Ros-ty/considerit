@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
   View,
@@ -12,7 +12,6 @@ import {
   ScrollView,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { BackHandler } from "react-native";
 import GlobalStyles from '../styles/GlobalStyles';
 
 const styles = StyleSheet.create({
@@ -29,20 +28,34 @@ const styles = StyleSheet.create({
     width: '90%',
     padding: 10,
   },
+  content_title: {
+    fontSize: 20,
+    fontWeight: 'normal',
+    color: 'skyblue',
+    marginTop: 10,
+  },
+  content_sub: {
+    fontSize: 18,
+    fontWeight: 'normal',
+    color: '#DDDDDD',
+    marginTop: 10,
+  },
 });
 
 class GetData extends Component {
-  static navigationOptions = ({ navigation }) => ({
+  // static navigationOptions = ({ navigation }) => ({
+  static navigationOptions = () => ({
     title: 'Get_Data_From_API',
     headerTitleStyle: {
       justifyContent: 'space-between',
       textAlign: 'center',
+      alignSelf: 'center',
+      flex: 1,
     },
     headerStyle: {
       backgroundColor: '#DDDDDD',
     },
     headerLeft: null,
-    gesturesEnabled: false,
     headerRight: (
       <TouchableOpacity style={{ marginRight: 20 }}>
         <Ionicons name="md-more" size={32} color="grey" />
@@ -59,7 +72,7 @@ class GetData extends Component {
   }
 
   render() {
-	  return (
+    return (
       <ScrollView style={GlobalStyles.container}>
         <View style={{ width: '100%', alignItems: 'center' }}>
           <TextInput
@@ -71,8 +84,19 @@ class GetData extends Component {
           />
 
           <View style={{ width: '60%', padding: 20 }}>
-            <Text style={{ fontSize: 20, fontWeight: 'normal', color: 'skyblue', marginTop: 10 }}>{'Some Text'.toUpperCase()}</Text>
-            <Text style={{ fontSize: 18, fontWeight: 'normal', color: '#DDDDDD', marginTop: 10 }}>Some Subtext - Lorem Lorem</Text>
+            <Text style={styles.content_title}>{'Some Text'.toUpperCase()}</Text>
+            <Text style={styles.content_sub}>Some Subtext - Lorem Lorem</Text>
+            <View>
+              <Image
+                source={{ uri: 'http://media2.giphy.com/media/FiGiRei2ICzzG/200.gif' }}
+                style={{ width: 200, height: 200, marginTop: 10 }}
+              />
+            </View>
+          </View>
+
+          <View style={{ width: '60%', padding: 20 }}>
+            <Text style={styles.content_title}>{'Some Text'.toUpperCase()}</Text>
+            <Text style={styles.content_sub}>Some Subtext - Lorem Lorem</Text>
             <View>
               <Image
                 source={{ uri: 'https://semantic-ui.com/images/wireframe/image.png' }}
@@ -82,19 +106,8 @@ class GetData extends Component {
           </View>
 
           <View style={{ width: '60%', padding: 20 }}>
-            <Text style={{ fontSize: 20, fontWeight: 'normal', color: 'skyblue', marginTop: 10 }}>{'Some Text'.toUpperCase()}</Text>
-            <Text style={{ fontSize: 18, fontWeight: 'normal', color: '#DDDDDD', marginTop: 10 }}>Some Subtext - Lorem Lorem</Text>
-            <View>
-              <Image
-                source={{ uri: 'https://semantic-ui.com/images/wireframe/image.png' }}
-                style={{ width: 200, height: 200, marginTop: 10 }}
-              />
-            </View>
-          </View>
-
-          <View style={{ width: '60%', padding: 20 }}>
-            <Text style={{ fontSize: 20, fontWeight: 'normal', color: 'skyblue', marginTop: 10 }}>{'Some Text'.toUpperCase()}</Text>
-            <Text style={{ fontSize: 18, fontWeight: 'normal', color: '#DDDDDD', marginTop: 10 }}>Some Subtext - Lorem Lorem</Text>
+            <Text style={styles.content_title}>{'Some Text'.toUpperCase()}</Text>
+            <Text style={styles.content_sub}>Some Subtext - Lorem Lorem</Text>
             <View>
               <Image
                 source={{ uri: 'https://semantic-ui.com/images/wireframe/image.png' }}
@@ -104,12 +117,16 @@ class GetData extends Component {
           </View>
         </View>
       </ScrollView>
-	  );
-	}
+    );
+  }
 }
 
 const mapStateToProp = () => ({
 
 });
+
+GetData.propTypes = {
+  navigation: PropTypes.shape({}).isRequired,
+};
 
 export default connect(mapStateToProp)(GetData);
