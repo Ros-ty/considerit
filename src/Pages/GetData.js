@@ -10,8 +10,10 @@ import {
   TextInput,
   Image,
   ScrollView,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { getGiphy } from '../actions/giphy';
 import GlobalStyles from '../styles/GlobalStyles';
 
 const styles = StyleSheet.create({
@@ -44,7 +46,7 @@ const styles = StyleSheet.create({
 
 class GetData extends Component {
   // static navigationOptions = ({ navigation }) => ({
-  static navigationOptions = () => ({
+  static navigationOptions = ({ navigation: { state: { params } } }) => ({
     title: 'Get_Data_From_API',
     headerTitleStyle: {
       justifyContent: 'space-between',
@@ -57,7 +59,11 @@ class GetData extends Component {
     },
     headerLeft: null,
     headerRight: (
-      <TouchableOpacity style={{ marginRight: 20 }}>
+      <TouchableOpacity
+        disabled={!params || !params.toglleMenu}
+        style={{ marginRight: 20, paddingHorizontal: 10 }}
+        onPress={() => params.toglleMenu()}
+      >
         <Ionicons name="md-more" size={32} color="grey" />
       </TouchableOpacity>
     ),
@@ -66,67 +72,105 @@ class GetData extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      // count: 0,
+      showMenu: false,
     };
     this.fullWidth = Dimensions.get('window').width;
   }
 
+  componentDidMount = () => {
+    const { navigation: { setParams, dispatch } } = this.props;
+    dispatch(getGiphy());
+    setParams({ toglleMenu: this.toglleMenu });
+  }
+
+  toglleMenu = () => this.setState(prevState => ({ showMenu: !prevState.showMenu }));
+
+  // renderGiphy = (giphy) => giphy.map()
+
   render() {
+    const { showMenu } = this.state;
     return (
       <ScrollView style={GlobalStyles.container}>
-        <View style={{ width: '100%', alignItems: 'center' }}>
-          <TextInput
-            style={styles.auth_input}
-            underlineColorAndroid="transparent"
-            placeholder="Search"
-            maxLength={40}
-            autoCapitalize="none"
-          />
+        <TouchableWithoutFeedback disabled={!showMenu} onPress={() => this.toglleMenu()}>
+          <View style={{ width: '100%', alignItems: 'center' }}>
+            <TextInput
+              style={styles.auth_input}
+              underlineColorAndroid="transparent"
+              placeholder="Search"
+              maxLength={40}
+              autoCapitalize="none"
+            />
 
-          <View style={{ width: '60%', padding: 20 }}>
-            <Text style={styles.content_title}>{'Some Text'.toUpperCase()}</Text>
-            <Text style={styles.content_sub}>Some Subtext - Lorem Lorem</Text>
-            <View>
-              <Image
-                source={{ uri: 'http://media2.giphy.com/media/FiGiRei2ICzzG/200.gif' }}
-                style={{ width: 200, height: 200, marginTop: 10 }}
-              />
+            <View style={{ width: '60%', padding: 20 }}>
+              <Text style={styles.content_title}>{'Some Text'.toUpperCase()}</Text>
+              <Text style={styles.content_sub}>Some Subtext - Lorem Lorem</Text>
+              <View>
+                <Image
+                  source={{ uri: 'http://media2.giphy.com/media/FiGiRei2ICzzG/200.gif' }}
+                  style={{ width: 200, height: 200, marginTop: 10 }}
+                />
+              </View>
+            </View>
+
+            <View style={{ width: '60%', padding: 20 }}>
+              <Text style={styles.content_title}>{'Some Text'.toUpperCase()}</Text>
+              <Text style={styles.content_sub}>Some Subtext - Lorem Lorem</Text>
+              <View>
+                <Image
+                  source={{ uri: 'https://semantic-ui.com/images/wireframe/image.png' }}
+                  style={{ width: 200, height: 200, marginTop: 10 }}
+                />
+              </View>
+            </View>
+
+            <View style={{ width: '60%', padding: 20 }}>
+              <Text style={styles.content_title}>{'Some Text'.toUpperCase()}</Text>
+              <Text style={styles.content_sub}>Some Subtext - Lorem Lorem</Text>
+              <View>
+                <Image
+                  source={{ uri: 'https://semantic-ui.com/images/wireframe/image.png' }}
+                  style={{ width: 200, height: 200, marginTop: 10 }}
+                />
+              </View>
             </View>
           </View>
-
-          <View style={{ width: '60%', padding: 20 }}>
-            <Text style={styles.content_title}>{'Some Text'.toUpperCase()}</Text>
-            <Text style={styles.content_sub}>Some Subtext - Lorem Lorem</Text>
-            <View>
-              <Image
-                source={{ uri: 'https://semantic-ui.com/images/wireframe/image.png' }}
-                style={{ width: 200, height: 200, marginTop: 10 }}
-              />
-            </View>
-          </View>
-
-          <View style={{ width: '60%', padding: 20 }}>
-            <Text style={styles.content_title}>{'Some Text'.toUpperCase()}</Text>
-            <Text style={styles.content_sub}>Some Subtext - Lorem Lorem</Text>
-            <View>
-              <Image
-                source={{ uri: 'https://semantic-ui.com/images/wireframe/image.png' }}
-                style={{ width: 200, height: 200, marginTop: 10 }}
-              />
-            </View>
-          </View>
+        </TouchableWithoutFeedback>
+        {showMenu && (
+        <View style={{
+          width: '80%',
+          height: 50,
+          position: 'absolute',
+          right: 0,
+          top: 0,
+          backgroundColor: '#fff',
+          padding: 10,
+          borderWidth: 1,
+          borderColor: '#DDDDDD',
+        }}
+        >
+          <Text style={{ fontSize: 20 }}>Some text</Text>
         </View>
+        )}
       </ScrollView>
     );
   }
 }
 
-const mapStateToProp = () => ({
-
+const mapStateToProps = ({ giphy: { giphy } }) => ({
+  giphy,
 });
+
+// const mapActionsToProps = {
+//   getGiphy,
+// };
 
 GetData.propTypes = {
   navigation: PropTypes.shape({}).isRequired,
+  // getGiphy: PropTypes.func.isRequired,
 };
 
-export default connect(mapStateToProp)(GetData);
+GetData.defaultProps = {
+  // giphy: [],
+};
+
+export default connect(mapStateToProps, getGiphy)(GetData);

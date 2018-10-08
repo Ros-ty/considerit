@@ -7,7 +7,7 @@ import {
   Text,
   Dimensions,
   TouchableOpacity,
-  StyleSheet,
+  // StyleSheet,
   TextInput,
   Image,
 } from 'react-native';
@@ -15,21 +15,9 @@ import LinkedInModal from 'react-native-linkedin';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import GlobalStyles from '../styles/GlobalStyles';
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'space-around',
-    alignItems: 'center',
-  },
-  auth_input: {
-    height: 60,
-    marginTop: 20,
-    borderWidth: 1,
-    borderColor: '#DDDDDD',
-    width: '90%',
-    padding: 10,
-  },
-});
+// const styles = StyleSheet.create({
+
+// });
 
 class SignIn extends Component {
   static navigationOptions = ({ navigation: { goBack } }) => ({
@@ -56,10 +44,13 @@ class SignIn extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      // password: '',
-      // email: '',
+
     };
     this.fullWidth = Dimensions.get('window').width;
+    this.linkedInModal = null;
+    this.linkedInModalRef = (node) => {
+      this.linkedInModal = node;
+    };
   }
 
 onPressButton = () => {
@@ -76,7 +67,7 @@ onPressButton = () => {
 
 render() {
   return (
-    <View style={styles.container}>
+    <View style={[GlobalStyles.container, { justifyContent: 'space-around', alignItems: 'center' }]}>
       <View style={{ height: '60%', width: '100%', alignItems: 'center' }}>
         <View style={{ justifyContent: 'center', alignItems: 'center' }}>
           <Image
@@ -86,29 +77,34 @@ render() {
           <Text style={{ fontSize: 20, fontWeight: 'bold', padding: 10 }}>Choose Your Method.</Text>
           <View style={{ flexDirection: 'row' }}>
             <Image
-              source={{ uri: 'https://png.pngtree.com/element_our/md/20180301/md_5a982744da73b.png' }}
-              style={{ width: 60, height: 60, padding: 10 }}
+              source={{ uri: 'https://semantic-ui.com/images/wireframe/image.png' }}
+              style={{ width: 40, height: 40, marginRight: 10, marginTop: 10 }}
             />
             <Image
-              source={{ uri: 'https://png.pngtree.com/element_our/md/20180301/md_5a982744da73b.png' }}
-              style={{ width: 60, height: 60, padding: 10 }}
+              source={{ uri: 'https://semantic-ui.com/images/wireframe/image.png' }}
+              style={{ width: 40, height: 40, marginTop: 10 }}
             />
-            <Image
-              source={{ uri: 'https://png.pngtree.com/element_our/md/20180301/md_5a982744da73b.png' }}
-              style={{ width: 60, height: 60, padding: 10 }}
-            />
-            <LinkedInModal
-              clientID="77ncmjo9a0iwf5"
-              clientSecret="R9SOMq50LL0NWGIH"
-              redirectUri="https://www.linkedin.com/developer/apps"
-              onSuccess={token => console.log(token)}
-              onSignIn={this.onPressButton}
-            />
+
+            <TouchableOpacity onPress={() => this.linkedInModal.open()} style={{ width: 60, height: 60 }}>
+              <LinkedInModal
+                ref={this.linkedInModalRef}
+                linkText=""
+                clientID="77ncmjo9a0iwf5"
+                clientSecret="R9SOMq50LL0NWGIH"
+                redirectUri="https://www.linkedin.com/developer/apps"
+                onSuccess={token => console.log(token)}
+                onSignIn={this.onPressButton}
+              />
+              <Image
+                source={{ uri: 'https://png.pngtree.com/element_our/md/20180301/md_5a982744da73b.png' }}
+                style={GlobalStyles.auth_btn}
+              />
+            </TouchableOpacity>
           </View>
         </View>
 
         <TextInput
-          style={styles.auth_input}
+          style={GlobalStyles.auth_input}
           underlineColorAndroid="transparent"
           placeholder="Email Address"
           maxLength={40}
@@ -116,7 +112,7 @@ render() {
         />
 
         <TextInput
-          style={styles.auth_input}
+          style={GlobalStyles.auth_input}
           underlineColorAndroid="transparent"
           placeholder="Password"
           maxLength={10}

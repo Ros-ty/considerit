@@ -80,15 +80,17 @@ class WelcomeScreen extends React.Component {
             </Text>
           </View>
 
-          <TouchableOpacity style={GlobalStyles.btn_green} onPress={this.onPressButton}>
-            <Text style={[GlobalStyles.notification_text, { fontWeight: 'normal', color: '#fff' }]}>Get started</Text>
-          </TouchableOpacity>
-
-          <View style={[GlobalStyles.view_conteiner, { flexDirection: 'row' }]}>
-            <Text style={GlobalStyles.regular_text}>Already have an account?</Text>
-            <TouchableOpacity onPress={() => navigate('SignIn')}>
-              <Text style={GlobalStyles.regular_text}>&nbsp;Sign In</Text>
+          <View style={{ width: '100%', alignItems: 'center' }}>
+            <TouchableOpacity style={GlobalStyles.btn_green} onPress={this.onPressButton}>
+              <Text style={[GlobalStyles.notification_text, { fontWeight: 'normal', color: '#fff' }]}>Get started</Text>
             </TouchableOpacity>
+
+            <View style={[GlobalStyles.view_conteiner, { flexDirection: 'row' }]}>
+              <Text style={GlobalStyles.regular_text}>Already have an account?</Text>
+              <TouchableOpacity onPress={() => navigate('SignIn')}>
+                <Text style={GlobalStyles.regular_text}>&nbsp;Sign In</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </View>

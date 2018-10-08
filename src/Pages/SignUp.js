@@ -10,6 +10,7 @@ import {
   StyleSheet,
   TextInput,
   Image,
+  SafeAreaView,
 } from 'react-native';
 import LinkedInModal from 'react-native-linkedin';
 import { Ionicons } from '@expo/vector-icons';
@@ -18,12 +19,12 @@ import GlobalStyles from '../styles/GlobalStyles';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     alignItems: 'center',
   },
   auth_input: {
     height: 60,
-    marginTop: 20,
+    marginTop: '10%',
     borderWidth: 1,
     borderColor: '#DDDDDD',
     width: '90%',
@@ -35,9 +36,9 @@ class SignUp extends Component {
 static navigationOptions = ({ navigation: { goBack } }) => ({
   title: 'Sign Up',
   headerTitleStyle: {
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     textAlign: 'center',
-    alignSelf: 'center',
+    // alignSelf: 'center',
     flex: 1,
   },
   headerStyle: {
@@ -56,10 +57,13 @@ static navigationOptions = ({ navigation: { goBack } }) => ({
 constructor(props) {
   super(props);
   this.state = {
-    // password: '',
-    // email: '',
+
   };
   this.fullWidth = Dimensions.get('window').width;
+  this.linkedInModal = null;
+  this.linkedInModalRef = (node) => {
+    this.linkedInModal = node;
+  };
 }
 
 changeInput = (event) => {
@@ -84,22 +88,26 @@ onPressButton = () => {
 render() {
   const { navigation: { navigate } } = this.props;
   return (
-    <View style={styles.container}>
-      <View style={{ height: '60%', width: '100%', alignItems: 'center' }}>
+    <SafeAreaView style={styles.container}>
+      <View style={{ width: '100%', alignItems: 'center' }}>
         <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-          <Image
-            source={{ uri: 'https://png.pngtree.com/element_our/md/20180301/md_5a982744da73b.png' }}
-            style={{ width: 60, height: 60, padding: 10 }}
-          />
+          <TouchableOpacity onPress={() => this.linkedInModal.open()} style={{ width: 60, height: 60 }}>
+            <LinkedInModal
+              ref={this.linkedInModalRef}
+              linkText=""
+              clientID="77ncmjo9a0iwf5"
+              clientSecret="R9SOMq50LL0NWGIH"
+              redirectUri="https://www.linkedin.com/developer/apps"
+              onSuccess={token => console.log(token)}
+              onSignIn={this.onPressButton}
+            />
+            <Image
+              source={{ uri: 'https://png.pngtree.com/element_our/md/20180301/md_5a982744da73b.png' }}
+              style={GlobalStyles.auth_btn}
+            />
+          </TouchableOpacity>
           <Text style={{ fontSize: 20, fontWeight: 'bold', color: 'skyblue' }}>Sign Up With LinkedIn</Text>
         </View>
-
-        <LinkedInModal
-          clientID="[ Your client id from https://www.linkedin.com/developer/apps ]"
-          clientSecret="[ Your client secret from https://www.linkedin.com/developer/apps ]"
-          redirectUri="[ Your redirect uri set into https://www.linkedin.com/developer/apps ]"
-          onSuccess={token => console.log(token)}
-        />
 
         <TextInput
           style={styles.auth_input}
@@ -124,18 +132,19 @@ render() {
           </Text>
         </View>
       </View>
-
-      <TouchableOpacity style={GlobalStyles.btn_green} onPress={this.onPressButton}>
-        <Text style={[GlobalStyles.notification_text, { fontWeight: 'normal', color: '#fff' }]}>{'Continue'.toUpperCase()}</Text>
-      </TouchableOpacity>
-
-      <View style={[GlobalStyles.view_conteiner, { flexDirection: 'row' }]}>
-        <Text style={[GlobalStyles.regular_text, { color: '#DDDDDD' }]}>Already have an account?</Text>
-        <TouchableOpacity onPress={() => navigate('SignIn')}>
-          <Text style={[GlobalStyles.regular_text, { color: '#DDDDDD' }]}>&nbsp;Sign In</Text>
+      <View style={{ width: '100%', alignItems: 'center' }}>
+        <TouchableOpacity style={GlobalStyles.btn_green} onPress={this.onPressButton}>
+          <Text style={[GlobalStyles.notification_text, { fontWeight: 'normal', color: '#fff' }]}>{'Continue'.toUpperCase()}</Text>
         </TouchableOpacity>
+
+        <View style={[GlobalStyles.view_conteiner, { flexDirection: 'row' }]}>
+          <Text style={[GlobalStyles.regular_text, { color: '#DDDDDD' }]}>Already have an account?</Text>
+          <TouchableOpacity onPress={() => navigate('SignIn')}>
+            <Text style={[GlobalStyles.regular_text, { color: '#DDDDDD' }]}>&nbsp;Sign In</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 }
