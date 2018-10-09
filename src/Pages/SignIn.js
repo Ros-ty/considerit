@@ -10,6 +10,8 @@ import {
   // StyleSheet,
   TextInput,
   Image,
+  Keyboard,
+  // TouchableWithoutFeedback,
 } from 'react-native';
 import LinkedInModal from 'react-native-linkedin';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -103,12 +105,15 @@ render() {
           </View>
         </View>
 
+        
         <TextInput
           style={GlobalStyles.auth_input}
           underlineColorAndroid="transparent"
           placeholder="Email Address"
           maxLength={40}
+          keyboardType="numeric"
           autoCapitalize="none"
+          onSubmitEditing={Keyboard.dismiss}
         />
 
         <TextInput
@@ -118,6 +123,7 @@ render() {
           maxLength={10}
           secureTextEntry
           autoCapitalize="none"
+          onSubmitEditing={Keyboard.dismiss}
         />
 
         <View style={{ width: '90%', paddingTop: 15 }}>

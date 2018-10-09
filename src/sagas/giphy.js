@@ -7,7 +7,7 @@ import { getGiphy as getGiphyAPI } from '../APIs/giphy';
 function* getGiphy() {
   try {
     const response = yield call(getGiphyAPI);
-    // console.log('response', response);
+    console.log('response', response);
     yield put(getGiphySuccess(response));
   } catch (error) {
     yield put(getGiphyFailure(error));

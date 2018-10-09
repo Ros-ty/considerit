@@ -49,6 +49,7 @@ export default StyleSheet.create({
     height: 60,
     marginTop: 20,
     borderWidth: 1,
+    backgroundColor: '#fff',
     borderColor: '#DDDDDD',
     width: '90%',
     padding: 10,
@@ -64,5 +65,5 @@ export default StyleSheet.create({
     bottom: 0,
   },
   // Sign_in styles
-
+  // GetData styles
 });
