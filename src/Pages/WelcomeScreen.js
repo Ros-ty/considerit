@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
+  AsyncStorage,
   Image,
   Text,
   View,
   Dimensions,
-  // Button,
-  // Alert,
   TouchableOpacity,
 } from 'react-native';
+import { NavigationActions } from 'react-navigation';
 import GlobalStyles from '../styles/GlobalStyles';
 
 class WelcomeScreen extends React.Component {
@@ -24,13 +24,14 @@ class WelcomeScreen extends React.Component {
     super(props);
     this.state = {
       text: 'Considerit',
+      validToken: false,
     };
     this.fullWidth = Dimensions.get('window').width;
   }
 
-  // componentDidMount() {
-
-  // }
+  componentDidMount = async () => {
+    await this.retrieveData();
+  }
 
   // componentDidUpdate() {
 
@@ -44,9 +45,32 @@ class WelcomeScreen extends React.Component {
 
   // }
 
+  retrieveData = async () => {
+    try {
+      const token = await AsyncStorage.getItem('setToken');
+      if (token !== null) {
+        this.onHaveToken();
+      }
+    } catch (error) {
+      console.log('error', error);
+    }
+  }
+
   onPressButton = () => {
     const { navigation: { navigate } } = this.props;
     navigate('SignUp');
+  }
+
+  onHaveToken = () => {
+    const { reset, navigate } = NavigationActions;
+    const { navigation: { dispatch } } = this.props;
+    const resetAction = reset({
+      index: 0,
+      actions: [
+        navigate({ routeName: 'GetData' }),
+      ],
+    });
+    dispatch(resetAction);
   }
 
   render() {
@@ -101,11 +125,5 @@ class WelcomeScreen extends React.Component {
 WelcomeScreen.propTypes = {
   navigation: PropTypes.shape().isRequired,
 };
-
-// WelcomeScreen.defaultProps = {
-//   myParams: {
-//     state: null,
-//   },
-// };
 
 export default WelcomeScreen;

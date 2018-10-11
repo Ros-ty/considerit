@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { NavigationActions } from 'react-navigation';
 import { connect } from 'react-redux';
 import {
+  AsyncStorage,
+  // ActivityIndicator,
   View,
   Text,
   Dimensions,
@@ -55,6 +57,10 @@ class SignIn extends Component {
     };
   }
 
+componentDidMount = async () => {
+  await this.retrieveData();
+}
+
 onPressButton = () => {
   const { reset, navigate } = NavigationActions;
   const { navigation: { dispatch } } = this.props;
@@ -65,6 +71,26 @@ onPressButton = () => {
     ],
   });
   dispatch(resetAction);
+}
+
+storeData = async (token) => {
+  try {
+    await AsyncStorage.setItem('setToken', token.access_token);
+    console.log('setToken', token);
+  } catch (error) {
+    console.log('setToken', error);
+  }
+}
+
+retrieveData = async () => {
+  try {
+    const token = await AsyncStorage.getItem('setToken');
+    if (token !== null) {
+      console.log('retrieve', token);
+    }
+  } catch (error) {
+    console.log('error', error);
+  }
 }
 
 render() {
@@ -94,7 +120,7 @@ render() {
                 clientID="77ncmjo9a0iwf5"
                 clientSecret="R9SOMq50LL0NWGIH"
                 redirectUri="https://www.linkedin.com/developer/apps"
-                onSuccess={token => console.log(token)}
+                onSuccess={this.storeData}
                 onSignIn={this.onPressButton}
               />
               <Image
@@ -105,7 +131,6 @@ render() {
           </View>
         </View>
 
-        
         <TextInput
           style={GlobalStyles.auth_input}
           underlineColorAndroid="transparent"

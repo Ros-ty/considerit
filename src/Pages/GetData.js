@@ -9,11 +9,12 @@ import {
   TouchableOpacity,
   StyleSheet,
   TextInput,
-  Image,
   ScrollView,
+  AsyncStorage,
   TouchableWithoutFeedback,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import Image from 'react-native-image-progress';
 import { getGiphy } from '../actions/giphy';
 import GlobalStyles from '../styles/GlobalStyles';
 import { getSearch } from '../actions/search';
@@ -105,7 +106,8 @@ class GetData extends Component {
     setParams({ toglleMenu: this.toglleMenu });
   }
 
-  onPressButton = () => {
+  onPressButton = async () => {
+    await this.remuveData();
     const { reset, navigate } = NavigationActions;
     const { navigation: { dispatch } } = this.props;
     const resetAction = reset({
@@ -117,25 +119,32 @@ class GetData extends Component {
     dispatch(resetAction);
   }
 
+  remuveData = async () => {
+    try {
+      await AsyncStorage.removeItem('setToken');
+      console.log('no data');
+    } catch (error) {
+      console.log('error', error);
+    }
+  }
+
   toglleMenu = () => this.setState(prevState => ({ showMenu: !prevState.showMenu }));
 
   renderGiphy = giphy => giphy.map(({
     id, title, images, slug,
-  }) => {
-    console.log('images', images);
-    return (
-      <View style={{ width: '80%', padding: 20 }} key={id}>
-        <Text style={styles.content_title}>{title.toUpperCase()}</Text>
-        <Text style={styles.content_sub}>{slug}</Text>
-        <View>
-          <Image
-            source={{ uri: images.fixed_height.url }}
-            style={styles.image_view}
-          />
-        </View>
+  }) => (
+    <View style={{ width: '80%', padding: 20 }} key={id}>
+      <Text style={styles.content_title}>{title.toUpperCase()}</Text>
+      <Text style={styles.content_sub}>{slug}</Text>
+      <View>
+        <Image
+          source={{ uri: images.fixed_height.url }}
+          indicator="bar"
+          style={styles.image_view}
+        />
       </View>
-    );
-  });
+    </View>
+  ));
 
   render() {
     const { giphy, navigation: { dispatch }, giphySearch } = this.props;
