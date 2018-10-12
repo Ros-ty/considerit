@@ -1,0 +1,234 @@
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+// import { NavigationActions } from 'react-navigation';
+import {
+  View,
+  Text,
+  Dimensions,
+  TouchableOpacity,
+  StyleSheet,
+  TextInput,
+  ScrollView,
+  // AsyncStorage,
+  TouchableWithoutFeedback,
+} from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import Image from 'react-native-image-progress';
+import { getGiphy, logOut } from '../actions';
+import GlobalStyles from '../styles/GlobalStyles';
+import { getSearch } from '../actions/search';
+
+const { width: fullWidth } = Dimensions.get('window');
+// const { height: fullHeight } = Dimensions.get('window');
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'space-around',
+    alignItems: 'center',
+  },
+  auth_input: {
+    height: 60,
+    marginTop: 20,
+    borderWidth: 1,
+    borderColor: '#DDDDDD',
+    width: '90%',
+    padding: 10,
+  },
+  content_title: {
+    fontSize: 20,
+    alignSelf: 'center',
+    fontWeight: 'normal',
+    color: 'skyblue',
+    marginTop: 10,
+  },
+  content_sub: {
+    fontSize: 18,
+    alignSelf: 'center',
+    fontWeight: 'normal',
+    color: '#DDDDDD',
+    marginTop: 10,
+  },
+  popup_menu: {
+    width: fullWidth * 0.8,
+    minWidth: 200,
+    height: 50,
+    position: 'absolute',
+    right: 10,
+    top: 0,
+    backgroundColor: '#fff',
+    padding: 10,
+    borderWidth: 1,
+    borderColor: '#DDDDDD',
+  },
+  image_view: {
+    width: 250,
+    height: 250,
+    marginTop: 10,
+    alignSelf: 'center',
+  },
+});
+
+class GetData extends Component {
+  static navigationOptions = ({ navigation: { state: { params } } }) => ({
+    title: 'Get_Data_From_API',
+    headerTitleStyle: {
+      justifyContent: 'space-between',
+      textAlign: 'center',
+      alignSelf: 'center',
+      flex: 1,
+    },
+    headerStyle: {
+      backgroundColor: '#DDDDDD',
+    },
+    headerLeft: null,
+    headerRight: [
+      <TouchableOpacity
+        disabled={!params || !params.toglleMenu}
+        style={{ marginRight: 20, paddingHorizontal: 10, zIndex: 100 }}
+        onPress={() => params.toglleMenu()}
+      >
+        <Ionicons name="md-more" size={32} color="grey" />
+      </TouchableOpacity>,
+      (params && params.popUpMenu) ? params.popUpMenu() : null,
+    ],
+  })
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      showMenu: false,
+      searchValue: '',
+    };
+  }
+
+  componentDidMount = () => {
+    const { navigation: { setParams, dispatch } } = this.props;
+    dispatch(getGiphy());
+    setParams({ toglleMenu: this.toglleMenu });
+  }
+
+  logOut = () => {
+    const { navigation: { dispatch } } = this.props;
+    dispatch(logOut());
+  }
+
+  // onPressButton = async () => {
+  //   await this.remuveData();
+  //   const { reset, navigate } = NavigationActions;
+  //   const { navigation: { dispatch } } = this.props;
+  //   const resetAction = reset({
+  //     index: 0,
+  //     actions: [
+  //       navigate({ routeName: 'WelcomeScreen' }),
+  //     ],
+  //   });
+  //   dispatch(resetAction);
+  // }
+
+  popUpMenu = () => (
+    <View style={styles.popup_menu}>
+      <TouchableOpacity onPress={this.logOut}>
+        <Text style={{ fontSize: 20, color: '#DDDDDD' }}>Log Out</Text>
+      </TouchableOpacity>
+    </View>
+  )
+
+  setIfShow = () => {
+    const { navigation: { setParams } } = this.props;
+    const { showMenu } = this.state;
+    setParams({ popUpMenu: showMenu ? this.popUpMenu : false });
+  }
+
+  // remuveData = async () => {
+  // try {
+  //   await AsyncStorage.removeItem('setToken');
+  //   console.log('no data');
+  // } catch (error) {
+  //   console.log('error', error);
+  // }
+  // }
+
+  toglleMenu = () => this.setState(({ showMenu }) => ({
+    showMenu: !showMenu,
+  }), this.setIfShow);
+
+  renderGiphy = giphy => giphy.map(({
+    id, title, images, slug,
+  }) => (
+    <View style={{ width: '80%', padding: 20 }} key={id}>
+      <Text style={styles.content_title}>{title.toUpperCase()}</Text>
+      <Text style={styles.content_sub}>{slug}</Text>
+      <View>
+        <Image
+          source={{ uri: images.fixed_height.url }}
+          indicator="bar"
+          style={styles.image_view}
+        />
+      </View>
+    </View>
+  ));
+
+  render() {
+    const { giphy, navigation: { dispatch }, giphySearch } = this.props;
+    const { showMenu, searchValue: search } = this.state;
+    const giphyData = search.trim().length > 0 ? giphySearch : giphy;
+    return (
+      <View style={{ flex: 1, backgroundColor: '#FFF' }}>
+        <View style={{ alignItems: 'center' }}>
+          <TextInput
+            style={styles.auth_input}
+            underlineColorAndroid="transparent"
+            placeholder="Search"
+            maxLength={40}
+            onChangeText={(searchValue) => {
+              this.setState({ searchValue }, () => {
+                const value = searchValue.trim().replace(/ /g, '+');
+                dispatch(getSearch(value));
+              });
+            }}
+            autoCapitalize="none"
+          />
+        </View>
+        <ScrollView style={GlobalStyles.container}>
+          <TouchableWithoutFeedback disabled={!showMenu} onPress={() => this.toglleMenu()}>
+            <View style={{ width: '100%', alignItems: 'center' }}>
+
+              {this.renderGiphy(giphyData)}
+
+              <View style={{ width: '80%', padding: 20 }}>
+                <Text style={styles.content_title}>{'Some Text'.toUpperCase()}</Text>
+                <Text style={styles.content_sub}>Some Subtext - Lorem Lorem</Text>
+                <View>
+                  <Image
+                    source={{ uri: 'http://media2.giphy.com/media/FiGiRei2ICzzG/200.gif' }}
+                    style={styles.image_view}
+                  />
+                </View>
+              </View>
+            </View>
+          </TouchableWithoutFeedback>
+        </ScrollView>
+      </View>
+    );
+  }
+}
+
+const mapStateToProps = ({ giphy: { giphy }, search: { search: giphySearch } }) => ({
+  giphy,
+  giphySearch,
+});
+
+GetData.propTypes = {
+  navigation: PropTypes.shape().isRequired,
+  giphySearch: PropTypes.arrayOf(PropTypes.shape({})),
+  giphy: PropTypes.arrayOf(PropTypes.shape({})),
+};
+
+GetData.defaultProps = {
+  giphy: [],
+  giphySearch: [],
+};
+
+export default connect(mapStateToProps)(GetData);

@@ -1,0 +1,28 @@
+{
+    "env": {
+      "node": true,
+      "browser": false,
+      "es6": true
+    },
+    "globals": {
+      "fetch": false,
+      "FormData": true
+    },
+    "parser": "babel-eslint",
+    "extends": "airbnb",
+    "rules": {
+      // "indent": [2, "tab"],
+      "react/jsx-filename-extension": [
+        1,
+        {
+          "extensions": [
+            ".js",
+            ".jsx"
+          ]
+        }
+      ],
+      "no-underscore-dangle": ["error", {
+        "allow": ["__REDUX_DEVTOOLS_EXTENSION__"]
+      }]
+    }
+  }

@@ -1,6 +1,15 @@
 import React from 'react';
-import WelcomScreen from './src/Pages/WelcomScreen';
+import { Provider } from 'react-redux';
+import configureStore from './storeConfig';
+import AppWithNavigationState from './src/navigators/AppWithNavigationState';
+
+const store = configureStore();
 
 export default () => (
-  <WelcomScreen />
+  <Provider store={store}>
+    <AppWithNavigationState />
+  </Provider>
 );
+
+console.ignoredYellowBox = ['Remote debugger'];
+console.disableYellowBox = true;
