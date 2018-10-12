@@ -15,6 +15,7 @@ import {
 } from 'react-native';
 import LinkedInModal from 'react-native-linkedin';
 import { Ionicons } from '@expo/vector-icons';
+// import { auth } from '../actions';
 import GlobalStyles from '../styles/GlobalStyles';
 
 const styles = StyleSheet.create({
@@ -39,7 +40,6 @@ static navigationOptions = ({ navigation: { goBack } }) => ({
   headerTitleStyle: {
     justifyContent: 'space-around',
     textAlign: 'center',
-    // alignSelf: 'center',
     flex: 1,
   },
   headerStyle: {
@@ -66,6 +66,11 @@ constructor(props) {
     this.linkedInModal = node;
   };
 }
+
+// auth = () => {
+//   const { navigation: { dispatch } } = this.props;
+//   dispatch(auth());
+// }
 
 onPressButton = () => {
   const { reset, navigate } = NavigationActions;

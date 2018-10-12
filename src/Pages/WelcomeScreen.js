@@ -24,26 +24,13 @@ class WelcomeScreen extends React.Component {
     super(props);
     this.state = {
       text: 'Considerit',
-      validToken: false,
     };
     this.fullWidth = Dimensions.get('window').width;
   }
 
-  componentDidMount = async () => {
+  async componentDidMount() {
     await this.retrieveData();
   }
-
-  // componentDidUpdate() {
-
-  // }
-
-  // shouldComponentUpdate() {
-
-  // }
-
-  // componentWillUnmount() {
-
-  // }
 
   retrieveData = async () => {
     try {

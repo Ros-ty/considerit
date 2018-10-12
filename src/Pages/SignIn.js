@@ -4,7 +4,6 @@ import { NavigationActions } from 'react-navigation';
 import { connect } from 'react-redux';
 import {
   AsyncStorage,
-  // ActivityIndicator,
   View,
   Text,
   Dimensions,
@@ -82,16 +81,16 @@ storeData = async (token) => {
   }
 }
 
-retrieveData = async () => {
-  try {
-    const token = await AsyncStorage.getItem('setToken');
-    if (token !== null) {
-      console.log('retrieve', token);
-    }
-  } catch (error) {
-    console.log('error', error);
-  }
-}
+// retrieveData = async () => {
+//   try {
+//     const token = await AsyncStorage.getItem('setToken');
+//     if (token !== null) {
+//       console.log('retrieve', token);
+//     }
+//   } catch (error) {
+//     console.log('error', error);
+//   }
+// }
 
 render() {
   return (

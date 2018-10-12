@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { NavigationActions } from 'react-navigation';
+// import { NavigationActions } from 'react-navigation';
 import {
   View,
   Text,
@@ -10,14 +10,17 @@ import {
   StyleSheet,
   TextInput,
   ScrollView,
-  AsyncStorage,
+  // AsyncStorage,
   TouchableWithoutFeedback,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Image from 'react-native-image-progress';
-import { getGiphy } from '../actions/giphy';
+import { getGiphy, logOut } from '../actions';
 import GlobalStyles from '../styles/GlobalStyles';
 import { getSearch } from '../actions/search';
+
+const { width: fullWidth } = Dimensions.get('window');
+// const { height: fullHeight } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
@@ -48,10 +51,11 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   popup_menu: {
-    width: '80%',
+    width: fullWidth * 0.8,
+    minWidth: 200,
     height: 50,
     position: 'absolute',
-    right: 0,
+    right: 10,
     top: 0,
     backgroundColor: '#fff',
     padding: 10,
@@ -67,7 +71,6 @@ const styles = StyleSheet.create({
 });
 
 class GetData extends Component {
-  // static navigationOptions = ({ navigation }) => ({
   static navigationOptions = ({ navigation: { state: { params } } }) => ({
     title: 'Get_Data_From_API',
     headerTitleStyle: {
@@ -80,15 +83,16 @@ class GetData extends Component {
       backgroundColor: '#DDDDDD',
     },
     headerLeft: null,
-    headerRight: (
+    headerRight: [
       <TouchableOpacity
         disabled={!params || !params.toglleMenu}
-        style={{ marginRight: 20, paddingHorizontal: 10 }}
+        style={{ marginRight: 20, paddingHorizontal: 10, zIndex: 100 }}
         onPress={() => params.toglleMenu()}
       >
         <Ionicons name="md-more" size={32} color="grey" />
-      </TouchableOpacity>
-    ),
+      </TouchableOpacity>,
+      (params && params.popUpMenu) ? params.popUpMenu() : null,
+    ],
   })
 
   constructor(props) {
@@ -97,7 +101,6 @@ class GetData extends Component {
       showMenu: false,
       searchValue: '',
     };
-    this.fullWidth = Dimensions.get('window').width;
   }
 
   componentDidMount = () => {
@@ -106,29 +109,50 @@ class GetData extends Component {
     setParams({ toglleMenu: this.toglleMenu });
   }
 
-  onPressButton = async () => {
-    await this.remuveData();
-    const { reset, navigate } = NavigationActions;
+  logOut = () => {
     const { navigation: { dispatch } } = this.props;
-    const resetAction = reset({
-      index: 0,
-      actions: [
-        navigate({ routeName: 'WelcomeScreen' }),
-      ],
-    });
-    dispatch(resetAction);
+    dispatch(logOut());
   }
 
-  remuveData = async () => {
-    try {
-      await AsyncStorage.removeItem('setToken');
-      console.log('no data');
-    } catch (error) {
-      console.log('error', error);
-    }
+  // onPressButton = async () => {
+  //   await this.remuveData();
+  //   const { reset, navigate } = NavigationActions;
+  //   const { navigation: { dispatch } } = this.props;
+  //   const resetAction = reset({
+  //     index: 0,
+  //     actions: [
+  //       navigate({ routeName: 'WelcomeScreen' }),
+  //     ],
+  //   });
+  //   dispatch(resetAction);
+  // }
+
+  popUpMenu = () => (
+    <View style={styles.popup_menu}>
+      <TouchableOpacity onPress={this.logOut}>
+        <Text style={{ fontSize: 20, color: '#DDDDDD' }}>Log Out</Text>
+      </TouchableOpacity>
+    </View>
+  )
+
+  setIfShow = () => {
+    const { navigation: { setParams } } = this.props;
+    const { showMenu } = this.state;
+    setParams({ popUpMenu: showMenu ? this.popUpMenu : false });
   }
 
-  toglleMenu = () => this.setState(prevState => ({ showMenu: !prevState.showMenu }));
+  // remuveData = async () => {
+  // try {
+  //   await AsyncStorage.removeItem('setToken');
+  //   console.log('no data');
+  // } catch (error) {
+  //   console.log('error', error);
+  // }
+  // }
+
+  toglleMenu = () => this.setState(({ showMenu }) => ({
+    showMenu: !showMenu,
+  }), this.setIfShow);
 
   renderGiphy = giphy => giphy.map(({
     id, title, images, slug,
@@ -185,13 +209,6 @@ class GetData extends Component {
               </View>
             </View>
           </TouchableWithoutFeedback>
-          {showMenu && (
-          <View style={styles.popup_menu}>
-            <TouchableOpacity onPress={this.onPressButton}>
-              <Text style={{ fontSize: 20, color: '#DDDDDD' }}>Log Out</Text>
-            </TouchableOpacity>
-          </View>
-          )}
         </ScrollView>
       </View>
     );
